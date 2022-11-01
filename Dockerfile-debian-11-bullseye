@@ -1,0 +1,20 @@
+FROM debian:bullseye-slim
+
+ARG nmap_version
+
+WORKDIR /tmp
+
+COPY "downloads/nmap-${nmap_version}.tar.bz2" /tmp/
+
+RUN apt-get update \
+    && apt-get install -y build-essential \
+    && bunzip2 "nmap-${nmap_version}.tar.bz2" \
+    && tar -xf "nmap-${nmap_version}.tar" \
+    && cd "nmap-${nmap_version}" \
+    && ./configure --without-subversion --without-zenmap --with-pcre=/usr --with-libpcap=included --with-libdnet=included --without-ndiff --without-nmap-update --without-ncat --without-nping --without-openssl \
+    && make -j4 static \
+    && mkdir nmap-data \
+    && cp -r nmap-mac-prefixes  nmap-os-db  nmap-payloads  nmap-protocols  nmap-rpc  nmap-service-probes  nmap-services nselib  nse_main.lua  scripts nmap-data \
+    && echo 'Usage: 1. upload nmap.tar to target, 2. run "tar -xf nmap.tar" to unpack, 3. run "NMAPDIR=$(pwd)/nmap-data ./nmap"' > README.txt \
+    && tar -cvf nmap.tar nmap nmap-data README.txt \
+    && cp nmap.tar /
