@@ -1,10 +1,12 @@
 #!/bin/bash
 set -e
 
-nmap_version="7.93"
+#nmap_version="7.93"
+nmap_version="7.95"
 
 # container_version="ubuntu-18.04-bionic"
-container_version="debian-11-bullseye"
+#container_version="debian-11-bullseye"
+container_version="debian-12-bookworm"
 
 echo "[+] Preparing directories..."
 mkdir -p output
